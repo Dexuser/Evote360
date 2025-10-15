@@ -1,0 +1,63 @@
+@model CitizenSaveViewModel 
+
+@{
+    bool editMode = ViewBag.EditMode ?? false;
+    ViewBag.Title = editMode ? "Registro de ciudadanos" : "Edición de ciudadanos";
+    Layout = "_LayoutAdministrator";
+}
+
+@{
+    if (!string.IsNullOrEmpty(ViewBag.Message))
+    {
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+            <p class="text-center">@Html.Raw(ViewBag.Message.Replace("\n", "<br />"))</p>
+            <br/>
+           <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+}
+
+<div class="col-12 col-md-4 offset-4">
+    <div class="card">
+        
+        <div class="card-header bg-primary text-center text-light">
+            @((editMode) ? $"{Model.FirstName} - editar" : "Registrar un ciudadano")
+        </div>
+
+        <div class="card-body">
+            <form asp-controller="Citizen" asp-action=@((editMode) ? "Edit" : "Save") method="post">
+                <input type="hidden" asp-for="Id" value="@Model.Id"/>
+                <input type="hidden" asp-for="IsActive" value="@Model.IsActive"/>
+                                
+                <div class="mt-2">
+                    <label class="form-label" asp-for="IdentityNumber">Número de identidad:</label>
+                    <input class="form-control" asp-for="IdentityNumber"/>
+                    <span class="text-danger" asp-validation-for="IdentityNumber"></span>
+                </div>
+                
+                <div class="mt-2">
+                    <label class="form-label" asp-for="FirstName">Nombres:</label>
+                    <input class="form-control" asp-for="FirstName"/>
+                    <span class="text-danger" asp-validation-for="FirstName"></span>
+                </div>
+
+                <div class="mt-2">
+                    <label class="form-label" asp-for="LastName">Apellidos:</label>
+                    <input class="form-control" asp-for="LastName"/>
+                    <span class="text-danger" asp-validation-for="LastName"></span>
+                </div>
+                
+                <div class="mt-2">
+                    <label class="form-label" asp-for="Email">Email:</label>
+                    <input class="form-control" asp-for="Email"/>
+                    <span class="text-danger" asp-validation-for="Email"></span>
+                </div>
+
+                <div class="mt-4 float-end">
+                    <button class="btn btn-outline-success me-2" type="submit">Guardar</button>
+                    <a class="btn btn-outline-warning" asp-controller="Citizen" asp-action="Index">Volver al index</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

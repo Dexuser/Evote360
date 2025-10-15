@@ -1,0 +1,73 @@
+﻿@using Evote360.Core.Domain.Common.Enums
+@model List<ElectionSummaryViewModel>
+@{
+    ViewData["Title"] = "Elecciones";
+    Layout = "_LayoutAdministrator";
+    bool dissableControls = ViewBag.DissableControls ?? false;
+}
+<div class="row">
+    <div class="text-center">
+        <div class="display-6">Elecciones</div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12 col-md-3">
+        @if (!dissableControls)
+        {
+            <a class="btn btn-success" asp-controller="Election" asp-action="Create">
+                Crear una nueva elección
+            </a>
+        }
+        else
+        {
+            <a class="btn btn-success disabled">
+                Crear una nueva elección
+            </a>
+        }
+    </div>
+</div>
+
+
+@foreach (var item in Model)
+{
+    <div class="row mt-3">
+
+        <table class="table table-sm table-light table-striped">
+            <thead class="@(item.Status == ElectionStatus.InProgress ? "table-primary" : "table-secondary")">
+            <tr>
+                <th>Nombre de la elección</th>
+                <th>Fecha de realización</th>
+                <th>Cant. de partidos participantes</th>
+                <th>Cant. de puestos electivos</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.Date</td>
+                    <td>@item.PoliticalPartiesCount</td>
+                    <td>@item.ElectivePositionsCount</td>
+                    <td>@item.StatusText</td>
+                    <td>
+
+                        @if (item.Status == ElectionStatus.Finished)
+                        {
+                            <a class="btn btn-sm btn-outline-warning me-2" asp-controller="Election"
+                               asp-action="Details"
+                               asp-route-id="@item.Id">Editar</a>
+                        }
+                        else
+                        {
+                            <a class="btn btn-sm btn-outline-danger me-2" asp-controller="Election"
+                               asp-action="FinalizeElection"
+                               asp-route-id="@item.Id">Finalizar</a>
+                        }
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+}

@@ -1,0 +1,28 @@
+@model PartyLeaderAssignmenDeleteViewModel 
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_LayoutAdministrator";
+}
+
+<div class="row">
+    <div class="col-12 col-md-4 offset-4">
+        <div class="card">
+            <div class="card-header text-center text-light bg-danger">
+                <h5 class="card-title">
+                    ¿Esta seguro de que desea desvincular este dirigente politico de este partido politico?
+                </h5>
+            </div>
+            <div class="card-body">
+                <form asp-controller="PartyLeaderAssignment" asp-action="Delete" method="post">
+                    <input type="hidden" asp-for="Id" value="@Model.Id"/>
+                    <div class="d-flex justify-content-center">
+                        <button type="submit" class="btn btn-outline-danger me-2">Aceptar</button>
+                        <a asp-controller="PartyLeaderAssignment" asp-action="Index" class="btn btn-outline-warning">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>

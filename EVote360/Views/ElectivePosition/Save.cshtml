@@ -1,0 +1,50 @@
+@model ElectivePositionSaveViewModel
+
+@{
+    bool editMode = ViewBag.EditMode ?? false;
+    ViewBag.Title = editMode ? "Creación de puestos electivos" : "Edición de puesto electivo";
+    Layout = "_LayoutAdministrator";
+}
+
+@{
+    if (!string.IsNullOrEmpty(ViewBag.Message))
+    {
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+            <p class="text-center">@Html.Raw(ViewBag.Message.Replace("\n", "<br />"))</p>
+            <br/>
+           <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+}
+
+<div class="col-12 col-md-4 offset-4">
+    <div class="card">
+        
+        <div class="card-header bg-primary text-center text-light">
+            @((editMode) ? $"{Model.Name} - editar" : "Registrar un puesto electivo")
+        </div>
+
+        <div class="card-body">
+            <form asp-controller="ElectivePosition" asp-action=@((editMode) ? "Edit" : "Save") method="post">
+                <input type="hidden" asp-for="Id" value="@Model.Id"/>
+                <input type="hidden" asp-for="IsActive" value="@Model.IsActive"/>
+                <div class="mt-2">
+                    <label class="form-label" asp-for="Name">Nombre:</label>
+                    <input class="form-control" asp-for="Name"/>
+                    <span class="text-danger" asp-validation-for="Name"></span>
+                </div>
+
+                <div class="mt-2">
+                    <label class="form-label" asp-for="Description">Descripción:</label>
+                    <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+                    <span class="text-danger" asp-validation-for="Description"></span>
+                </div>
+
+                <div class="mt-4 float-end">
+                    <button class="btn btn-outline-success me-2" type="submit">Guardar</button>
+                    <a class="btn btn-outline-warning" asp-controller="ElectivePosition" asp-action="Index">Volver al index</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

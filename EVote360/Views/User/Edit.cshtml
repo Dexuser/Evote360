@@ -1,0 +1,82 @@
+@model UserUpdateViewModel 
+
+@{
+    ViewBag.Title = "Edición de usuarios";
+    Layout = "_LayoutAdministrator";
+}
+
+@{
+    if (!string.IsNullOrEmpty(ViewBag.Message))
+    {
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+            <p class="text-center">@Html.Raw(ViewBag.Message.Replace("\n", "<br />"))</p>
+            <br/>
+           <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+}
+
+<div class="col-12 col-md-6 offset-3">
+    <div class="card">
+        
+        <div class="card-header bg-primary text-center text-light">
+            Editar un partido politico
+        </div>
+
+        <div class="card-body">
+            <form asp-controller="User" asp-action="Edit" method="post" enctype="multipart/form-data">
+                <input type="hidden" asp-for="Id" value="@Model.Id"/>
+                <input type="hidden" asp-for="IsActive" value="@Model.IsActive"/>
+                                
+                <div class="mt-2">
+                    <label class="form-label" asp-for="FirstName">Nombre</label>
+                    <input class="form-control" asp-for="FirstName"/>
+                    <span class="text-danger" asp-validation-for="FirstName"></span>
+                </div>
+                
+                <div class="mt-2">
+                    <label class="form-label" asp-for="LastName">Apellidos:</label>
+                    <input class="form-control" asp-for="LastName"/>
+                    <span class="text-danger" asp-validation-for="LastName"></span>
+                </div>
+
+                <div class="mt-2">
+                    <label class="form-label" asp-for="Email">Email:</label>
+                    <input class="form-control" asp-for="Email"/>
+                    <span class="text-danger" asp-validation-for="Email"></span>
+                </div>
+                
+                <div class="mt-2">
+                    <label class="form-label" asp-for="UserName">Nombre de usuario:</label>
+                    <input class="form-control" asp-for="UserName"/>
+                    <span class="text-danger" asp-validation-for="UserName"></span>
+                </div>
+                
+                <div class="mt-2">
+                    <label class="form-label" asp-for="Password">Contraseña:</label>
+                    <input class="form-control" asp-for="Password"/>
+                    <span class="text-danger" asp-validation-for="Password"></span>
+                </div>
+                
+                <div class="mt-2">
+                    <label class="form-label" asp-for="ConfirmPassword">Confirmar contraseña:</label>
+                    <input class="form-control" asp-for="ConfirmPassword"/>
+                    <span class="text-danger" asp-validation-for="ConfirmPassword"></span>
+                </div>
+                <div class="mt-2">
+                    <label class="form-label" asp-for="Role">Rol:</label>
+                    <select class="form-select" asp-for="Role">
+                        <option value="0">Administrador</option>
+                        <option value="1">Dirigente politico</option>
+                    </select>
+                    <span class="text-danger" asp-validation-for="Role"></span>
+                </div>
+
+                <div class="mt-4 float-end">
+                    <button class="btn btn-outline-success me-2" type="submit">Guardar</button>
+                    <a class="btn btn-outline-warning" asp-controller="User" asp-action="Index">Volver al index</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

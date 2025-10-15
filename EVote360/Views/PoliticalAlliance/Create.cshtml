@@ -1,0 +1,48 @@
+@model PoliticalAllianceCreateViewModel 
+
+@{
+    bool editMode = ViewBag.EditMode ?? false;
+    ViewBag.Title = "Crear de solicitud de alianza";
+    Layout = "_LayoutPartyLeader";
+}
+
+@{
+    if (!string.IsNullOrEmpty(ViewBag.Message))
+    {
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+            <p class="text-center">@Html.Raw(ViewBag.Message.Replace("\n", "<br />"))</p>
+            <br/>
+           <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+}
+
+<div class="col-12 col-md-4 offset-4">
+    <div class="card">
+        
+        <div class="card-header bg-primary text-center text-light">
+            Crear una solicitud de alianza
+        </div>
+
+        <div class="card-body">
+            <form asp-controller="PoliticalAlliance" asp-action="Create" method="post">
+                <input type="hidden" asp-for="Id" value="@Model.Id"/>
+                <input type="hidden" asp-for="RequestingPartyId" value="@Model.RequestingPartyId"/>
+                
+                                
+                <div class="mt-2">
+                    <label class="form-label" asp-for="TargetPartyId">Partido político:</label>
+                    <select class="form-select" asp-for="TargetPartyId" asp-items="ViewBag.PoliticalParties">
+                        <option value="">--Seleccione un partido político--</option>
+                    </select>
+                    <span class="text-danger" asp-validation-for="TargetPartyId"></span>
+                </div>
+               
+                <div class="mt-4 float-end">
+                    <button class="btn btn-outline-success me-2" type="submit">Crear</button>
+                    <a class="btn btn-outline-warning" asp-controller="PoliticalAlliance" asp-action="Index">Volver al index</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

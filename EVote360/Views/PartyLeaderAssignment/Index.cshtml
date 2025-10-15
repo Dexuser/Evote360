@@ -1,0 +1,73 @@
+﻿@model List<PartyLeaderAssignmentViewModel>
+@{
+    ViewData["Title"] = "Asignación de dirigentes políticos";
+    Layout = "_LayoutAdministrator";
+    bool dissableControls = ViewBag.DissableControls ?? false;
+}
+<div class="row">
+    <div class="text-center">
+        <div class="display-4">Listado de dirigentes políticos</div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12 col-md-3">
+        @if (!dissableControls)
+        {
+            <a class="btn btn-success" asp-controller="PartyLeaderAssignment" asp-action="Create">
+                Agregar un nuevo dirigente político
+            </a>
+        }
+        else
+        {
+            <a class="btn btn-success disabled">
+                Agregar un nuevo dirigente político
+            </a>
+        }
+    </div>
+</div>
+
+<div class="row mt-2">
+    @if (Model.Count == 0)
+    {
+        <div class="text-center">
+            <h4 class="display-4">Aun no hay dirigentes políticos registrados </h4>
+        </div>
+    }
+    else
+    {
+        <table class="table table-sm table-light table-striped">
+            <thead class="table-primary">
+            <tr>
+                <th>Nombre del dirigente</th>
+                <th>Siglas del partido</th>
+                <th>Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.UserName</td>
+                    <td>@item.PoliticalPartyAcronym</td>
+                    <td>
+
+                        @if (!dissableControls)
+                        {
+                            // Controles activos
+                            <a class="btn btn-sm btn-outline-warning me-2" asp-controller="PartyLeaderAssignment"
+                               asp-action="Delete"
+                               asp-route-id="@item.Id">Desvincular</a>
+                        }
+                        else
+                        {
+                            <a class="btn btn-sm btn-outline-warning me-2 disabled"
+                               asp-route-id="@item.Id">Desvincular</a>
+                        }
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+</div>

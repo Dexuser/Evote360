@@ -1,0 +1,84 @@
+﻿@model List<CitizenViewModel>
+@{
+    ViewData["Title"] = "Mantenimiento de ciudadanos";
+    Layout = "_LayoutAdministrator";
+    bool dissableControls = ViewBag.DissableControls ?? false;
+}
+<div class="row">
+    <div class="text-center">
+        <div class="display-4">Listado de ciudadanos</div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12 col-md-3">
+        @if (!dissableControls)
+        {
+            <a class="btn btn-success" asp-controller="Citizen" asp-action="Save">
+                Agregar un nuevo ciudadano
+            </a>
+        }
+        else
+        {
+            <a class="btn btn-success disabled">
+                Agregar un nuevo ciudadano
+            </a>
+        }
+    </div>
+</div>
+
+<div class="row mt-2">
+    @if (Model.Count == 0)
+    {
+        <div class="text-center">
+            <h4 class="display-4">No hay ciudadanos registrados aun</h4>
+        </div>
+    }
+    else
+    {
+        <table class="table table-sm table-light table-striped">
+            <thead class="table-primary">
+            <tr>
+                <th>Numero de identidad</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Email</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.IdentityNumber</td>
+                    <td>@item.FirstName</td>
+                    <td>@item.LastName</td>
+                    <td>@item.Email</td>
+                    <td>@(item.IsActive ? "Activo" : "Inactivo")</td>
+                    <td>
+
+                        @if (!dissableControls)
+                        {
+                            // Controles activos
+                            <a class="btn btn-sm btn-outline-warning me-2" asp-controller="Citizen" asp-action="Edit"
+                               asp-route-id="@item.Id">Editar</a>
+                            <a class="btn btn-sm btn-outline-danger" asp-controller="Citizen" asp-action="ChangeState"
+                               asp-route-id="@item.Id">
+                                @(item.IsActive ? "Desactivar" : "Activar")
+                            </a>
+                        }
+                        else
+                        {
+                            <a class="btn btn-sm btn-outline-warning me-2 disabled">Editar</a>
+                            <a class="btn btn-sm btn-outline-danger disabled">
+                                @(item.IsActive ? "Desactivar" : "Activar")
+                            </a>
+                        }
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+</div>

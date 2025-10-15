@@ -1,0 +1,86 @@
+@model List<CandidateViewModel>;
+@{
+    ViewData["Title"] = "Mantenimiento candidatos";
+    Layout = "_LayoutPartyLeader";
+    bool dissableControls = ViewBag.DissableControls ?? false;
+}
+
+<div class="row">
+    <div class="text-center">
+        <h1 class="display-4">Listado de candidatos</h1>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12 col-md-3">
+        @if (!dissableControls)
+        {
+            <a class="btn btn-success" asp-controller="Candidate" asp-action="Create">
+                Agregar un nuevo partido político 
+            </a>
+        }
+        else
+        {
+            <a class="btn btn-success disabled">
+                Agregar un nuevo partido político
+            </a>
+        }
+    </div>
+</div>
+
+<div class="row mt-2">
+    @if (Model.Count == 0)
+    {
+        <div class="text-center">
+            <h4 class="display-4">Todavia no hay candidatos registrados</h4>
+        </div>
+    }
+    else
+    {
+        foreach (var item in Model)
+        {
+            <div class="col-12 col-md-3">
+                <div class="card">
+                    <img src="@item.PhotoPath" class="card-img-top responsive-image" alt=@($"Foto de {item.FirstName} {item.LastName}")>
+                    <div class="card-body">
+                        <h5 class="card-title">@($"{item.FirstName} {item.LastName}")</h5>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <span class="fw-bold">Puesto asociado:</span> @(item.ElectivePosition?.Name ?? "Sin puesto asociado")
+                        </li>
+                        <li class="list-group-item">
+                            <span class="fw-bold">Estado:</span> 
+                            <span class="badge @(item.IsActive ? "bg-primary" : "bg-secondary")">
+                                @(item.IsActive ? "Activo" : "Inactivo")
+                            </span>
+                        </li>
+                    </ul>
+                    <div class="card-body">
+                     
+                        @if (!dissableControls)
+                        {
+                            // Controles activos
+                            <a class="btn btn-sm btn-outline-warning me-2" asp-controller="Candidate" asp-action="Edit"
+                               asp-route-id="@item.Id">Editar</a>
+                            <a class="btn btn-sm btn-outline-danger" asp-controller="Candidate" asp-action="ChangeState"
+                               asp-route-id="@item.Id">
+                                @(item.IsActive ? "Desactivar" : "Activar")
+                            </a>
+                        }
+                        else
+                        {
+                            <a class="btn btn-sm btn-outline-warning me-2 disabled">Editar</a>
+                            <a class="btn btn-sm btn-outline-danger disabled">
+                                @(item.IsActive ? "Desactivar" : "Activar")
+                            </a>
+                        }                       
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>
+
+
+

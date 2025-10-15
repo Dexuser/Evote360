@@ -1,0 +1,72 @@
+﻿@model List<ElectionSummaryCandidateViewModel>
+@{
+    ViewData["Title"] = "Admin Home Page";
+    Layout = "_LayoutAdministrator";
+    bool dissableControls = ViewBag.DissableControls ?? false;
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-10">
+            <form asp-controller="AdminHome" asp-action="Index" method="post"
+                  class="d-flex justify-content-center align-content-center">
+
+                <div class="me-2">
+                    <label class="col-form-label ">Selecciona un año:</label>
+                </div>
+
+                @{
+                    if (!dissableControls)
+                    {
+                        // Estos son los controles activos
+                        <div class="me-2">
+                            <select name="year" asp-items="ViewBag.Years" class="form-select"></select>
+                        </div>
+
+                        <div>
+                            <button type="submit" class="btn btn-primary">Obtener resumen electoral</button>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="me-2">
+                            <select disabled asp-items="ViewBag.Years" class="form-select disabled"></select>
+                        </div>
+
+                        <div>
+                            <button disabled type="submit" class="btn btn-primary disabled">Obtener resumen electoral</button>
+                        </div>
+                    }
+
+                }
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-2">
+    @if (Model.Count != 0)
+    {
+        <table class="table table-sm table-light table-striped">
+            <thead class="table-primary">
+            <tr>
+                <th>Nombre de la eleccion</th>
+                <th>Cant. de partidos participantes </th>
+                <th>Cant. de candidatos participantes</th>
+                <th>Cant. de votos emitidos</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.PoliticalPartyCount</td>
+                    <td>@item.CandidatesCount</td>
+                    <td>@item.VotesCount</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+</div>

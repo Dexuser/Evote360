@@ -1,0 +1,53 @@
+@model CandidatePositionCreateViewModel 
+@{
+    ViewBag.Title = "Asignación de puesto";
+    Layout = "_LayoutPartyLeader";
+}
+
+@{
+    if (!string.IsNullOrEmpty(ViewBag.Message))
+    {
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+            <p class="text-center">@Html.Raw(ViewBag.Message.Replace("\n", "<br />"))</p>
+            <br/>
+           <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+}
+
+<div class="col-12 col-md-4 offset-4">
+    <div class="card">
+        
+        <div class="card-header bg-primary text-center text-light">
+            Asignación de puesto
+        </div>
+
+        <div class="card-body">
+            <form asp-controller="CandidatePosition" asp-action="Create" method="post">
+                <input type="hidden" asp-for="Id" value="@Model.Id"/>
+                <input type="hidden" asp-for="PoliticalPartyId" value="@Model.PoliticalPartyId"/>
+                                
+                <div class="mt-2">
+                    <label class="form-label" asp-for="CandidateId">Candidato:</label>
+                    <select class="form-select" asp-for="CandidateId" asp-items="ViewBag.Candidates">
+                        <option value="">--Seleccione un candidato--</option>
+                    </select>
+                    <span class="text-danger" asp-validation-for="CandidateId"></span>
+                </div>
+                
+                <div class="mt-2">
+                    <label class="form-label" asp-for="ElectivePositionId">Puesto electivo:</label>
+                    <select class="form-select" asp-for="ElectivePositionId" asp-items="ViewBag.ElectivePositions">
+                        <option value="">--Seleccione un puesto electivo--</option>
+                    </select>
+                    <span class="text-danger" asp-validation-for="ElectivePositionId"></span>
+                </div>
+                
+                <div class="mt-4 float-end">
+                    <button class="btn btn-outline-success me-2" type="submit">Guardar</button>
+                    <a class="btn btn-outline-warning" asp-controller="CandidatePosition" asp-action="Index">Volver al index</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,54 @@
+@model PartyLeaderAssignmentCreateViewModel 
+
+@{
+    bool editMode = ViewBag.EditMode ?? false;
+    ViewBag.Title = "Asignación de dirigentes políticos";
+    Layout = "_LayoutAdministrator";
+}
+
+@{
+    if (!string.IsNullOrEmpty(ViewBag.Message))
+    {
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+            <p class="text-center">@Html.Raw(ViewBag.Message.Replace("\n", "<br />"))</p>
+            <br/>
+           <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+}
+
+<div class="col-12 col-md-4 offset-4">
+    <div class="card">
+        
+        <div class="card-header bg-primary text-center text-light">
+            Asociar un dirigente político a un partido
+        </div>
+
+        <div class="card-body">
+            <form asp-controller="PartyLeaderAssignment" asp-action="Create" method="post">
+                <input type="hidden" asp-for="Id" value="@Model.Id"/>
+                                
+                <div class="mt-2">
+                    <label class="form-label" asp-for="PoliticalPartyId">Partido político:</label>
+                    <select class="form-select" asp-for="PoliticalPartyId" asp-items="ViewBag.PoliticalParties">
+                        <option value="">--Seleccione un partido político--</option>
+                    </select>
+                    <span class="text-danger" asp-validation-for="PoliticalPartyId"></span>
+                </div>
+                
+                <div class="mt-2">
+                    <label class="form-label" asp-for="UserId">dirigente políticos:</label>
+                    <select class="form-select" asp-for="UserId" asp-items="ViewBag.PoliticalLeaders">
+                        <option value="">--Seleccione un dirigente politico--</option>
+                    </select>
+                    <span class="text-danger" asp-validation-for="UserId"></span>
+                </div>
+                
+                <div class="mt-4 float-end">
+                    <button class="btn btn-outline-success me-2" type="submit">Guardar</button>
+                    <a class="btn btn-outline-warning" asp-controller="PartyLeaderAssignment" asp-action="Index">Volver al index</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

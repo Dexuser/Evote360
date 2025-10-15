@@ -1,0 +1,170 @@
+﻿@model PoliticalAllianceIndexViewModel
+@using Evote360.Core.Application.Interfaces
+@inject IUserSession userSession; 
+@inject IPartyLeaderAssignmentServices partyLeaderServices;
+@{
+    UserViewModel? user = userSession.GetUserSession();
+    var party = await partyLeaderServices.GetPoliticalPartyAsocciated(user!.Id);
+    var partyId = party.Value!.Id;
+}
+@{
+    ViewData["Title"] = "Mantenimiento de alianzas políticas";
+    Layout = "_LayoutPartyLeader";
+    bool dissableControls = ViewBag.DissableControls ?? false;
+}
+<div class="row">
+    <div class="text-center">
+        <div class="display-6">Listado de alianzas</div>
+    </div>
+</div>
+
+@{
+    if (!string.IsNullOrEmpty(ViewBag.Message))
+    {
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+            <p class="text-center">@Html.Raw(ViewBag.Message.Replace("\n", "<br />"))</p>
+            <br/>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+}
+
+<div class="row mt-2">
+    
+    <table class="table table-sm table-light table-striped">
+        <thead class="table-primary">
+        <tr>
+            <th>Partido solicitante</th>
+            <th>Fecha de solicitud</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model.RequestsAlliances)
+        {
+            <tr>
+                <td>@($"{item.RequestingParty!.Name} {item.RequestingParty.Acronym}")</td>
+                <td>@item.RequestDate</td>
+                <td>
+
+                    @if (!dissableControls)
+                    {
+                        // Controles activos
+                        <a class="btn btn-sm btn-outline-warning me-2" asp-controller="PoliticalAlliance"
+                           asp-action="ChangeState"
+                           asp-route-politicalAllianceId="@item.Id"
+                           asp-route-accepted="true"
+                           asp-route-politicalPartyName="@item.RequestingParty!.Name"
+                           asp-route-politicalPartyAcronym="@item.RequestingParty.Acronym"
+                           >
+                            Aceptar
+                        </a>
+                        
+                        <a class="btn btn-sm btn-outline-danger" asp-controller="PoliticalAlliance"
+                           asp-action="ChangeState"
+                           asp-route-politicalAllianceId="@item.Id"
+                           asp-route-accepted="false"
+                           asp-route-politicalPartyName="@item.RequestingParty!.Name"
+                           asp-route-politicalPartyAcronym="@item.RequestingParty.Acronym"
+                           >
+                            Rechazar
+                        </a>
+                    }
+                    else
+                    {
+                        <a class="btn btn-sm btn-outline-warning me-2 disabled">Aceptar</a>
+                        <a class="btn btn-sm btn-outline-danger disabled">Rechazar</a>
+                    }
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
+
+
+<div class="row mt-4">
+    <div class="col-12 col-md-3">
+        @if (!dissableControls)
+        {
+            <a class="btn btn-success" asp-controller="PoliticalAlliance" asp-action="Create">
+                Agregar una nueva alianza
+            </a>
+        }
+        else
+        {
+            <a class="btn btn-success disabled">
+                Agregar una nueva alianza
+            </a>
+        }
+    </div>
+</div>
+
+<div class="row mt-4">
+    
+    <table class="table table-sm table-light table-striped">
+        <thead class="table-primary">
+        <tr>
+            <th>Partido destino</th>
+            <th>Fecha de solicitud</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model.TargetAlliances)
+        {
+            <tr>
+                <td>@($"{item.TargetParty!.Name} {item.TargetParty.Acronym}")</td>
+                <td>@item.RequestDate</td>
+                <td>@item.StatusText</td>
+                <td>
+
+                    @if (!dissableControls)
+                    {
+                        // Controles activos
+                        <a class="btn btn-sm btn-outline-danger" asp-controller="PoliticalAlliance"
+                           asp-action="Delete"
+                           asp-route-id="@item.Id">
+                           Eliminar 
+                        </a>
+                    }
+                    else
+                    {
+                        <a class="btn btn-sm btn-outline-warning me-2 disabled">Aceptar</a>
+                        <a class="btn btn-sm btn-outline-danger disabled">Rechazar</a>
+                    }
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
+
+
+<div class="row mt-4">
+    
+    <table class="table table-sm table-light table-striped">
+        <thead class="table-primary">
+        <tr>
+            <th>Partido aliado</th>
+            <th>Fecha en que se acepto la solicitud </th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model.ActualAlliances)
+        {
+            <tr>
+                <td>
+                    @(
+                    item.RequestingParty!.Id != partyId
+                        ? $"{item.RequestingParty.Name} {item.RequestingParty!.Acronym}"
+                        : $"{item.TargetParty!.Name} {item.TargetParty!.Acronym}"
+                    )
+                </td>
+                <td>@item.ResponseDate</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
